@@ -81,11 +81,11 @@ function toggleReadStatus() {
 function toggleBookForm() {
     let bookForm = document.getElementById("new-book-form");
     let newBookBtn = document.getElementById("new-book-btn");
-    if (bookForm.style.display === "none") {
-        bookForm.style.display = "grid";
+    if (bookForm.className === "hidden") {
         newBookBtn.textContent = "Hide Form"
+        bookForm.classList.remove('hidden');
     } else {
-        bookForm.style.display = "none";
+        bookForm.classList.add('hidden');
         newBookBtn.textContent = "New Book";
     }
 }

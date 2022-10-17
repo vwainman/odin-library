@@ -163,3 +163,72 @@ button:hover {
     -ms-transform: rotate(45deg);
     transform: rotate(45deg);
 }
+
+@media (max-width: 600px) {
+
+    body {
+        min-width: 360px;
+        font-size: 15px;
+    }
+
+    table {
+        width: 100%;
+    }
+
+    td {
+        min-width: 30px;
+        min-height: 30px;
+        overflow: hidden;
+    }
+
+    header {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #new-book-form {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 15px;
+    }
+
+    input,
+    select {
+        width: auto;
+        text-align: center;
+    }
+
+    input#pages {
+        text-align: center;
+    }
+
+    #read-container {
+        padding: 0;
+        margin: 0;
+    }
+
+    #read-container input {
+        height: auto;
+        width: auto;
+        opacity: inherit;
+        position: inherit;
+    }
+
+    .checkmark {
+        display: none;
+    }
+
+    button {
+        padding: 5px !important;
+    }
+
+
+}
+
+.hidden {
+    display: none !important;
+}
