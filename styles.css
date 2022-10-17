@@ -40,6 +40,10 @@ select {
     width: 100%;
 }
 
+input#pages {
+    text-align: right;
+}
+
 button#submit-book {
     margin-top: auto;
     height: 40px;
@@ -51,6 +55,7 @@ table {
     table-layout: fixed;
     border-collapse: collapse;
     border: 1px solid black;
+    text-align: center;
 }
 
 td {
