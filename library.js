@@ -2,6 +2,8 @@
 
 const MIN_PAGES = 1;
 const MAX_PAGES = 99999;
+const TABLE_ID = "library";
+const ROW_DATA_ATTR_NAME = "data-index-number";
 const REQUIRED_INPUT_IDS = ["title", "author", "pages"]
 const defaultBook1 = new Book("The Fellowship of the Ring", "J. R. R. Tolkien", 479, "Read");
 const defaultBook2 = new Book("The Two Towers", "J. R. R. Tolkien", 352, "Read");
@@ -24,10 +26,10 @@ function addBookToLibrary(book) {
     library.push(book);
 }
 
-function insertHTMLTableRow(object, index, tableIndex = 0) {
-    const tbody = document.getElementsByTagName('table')[tableIndex].getElementsByTagName('tbody')[0];
+function insertHTMLTableRow(object, index) {
+    const tbody = document.getElementById(TABLE_ID).getElementsByTagName('tbody')[0];
     const row = tbody.insertRow(index);
-    row.setAttribute("data-index-number", index);
+    row.setAttribute(ROW_DATA_ATTR_NAME, index);
     insertSanitizedRowCells(row, object);
 }
 
@@ -52,18 +54,18 @@ function appendButtonCell(row, text, classValue, onclickEvent) {
 }
 
 // remove the selected book from the libary
-function removeBook(tableIndex = 0) {
+function removeBook() {
     const bookRow = this.closest('tr');
     const rowIndex = Number(bookRow.dataset.indexNumber);
     // update the html table and library array
     library.splice(rowIndex, 1);
-    const tbody = document.getElementsByTagName('table')[tableIndex].getElementsByTagName('tbody')[0];
+    const tbody = document.getElementById(TABLE_ID).getElementsByTagName('tbody')[0];
     tbody.deleteRow(rowIndex);
     // very inefficient update to the data index number
     // we could cascade updates from the position of the deleted element instead
     // TODO: refactor
     for (let i = 0, row; row = tbody.rows[i]; i++) {
-        row.setAttribute("data-index-number", i);
+        row.setAttribute(ROW_DATA_ATTR_NAME, i);
     }
 
 }
