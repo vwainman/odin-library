@@ -1,13 +1,14 @@
 'use strict';
 
+const MIN_PAGES = 1;
+const MAX_PAGES = 99999;
+const REQUIRED_INPUT_IDS = ["title", "author", "pages"]
 const defaultBook1 = new Book("The Fellowship of the Ring", "J. R. R. Tolkien", 479, "Read");
 const defaultBook2 = new Book("The Two Towers", "J. R. R. Tolkien", 352, "Read");
 const library = [];
 addBookToLibrary(defaultBook1);
 addBookToLibrary(defaultBook2);
 const bookForm = document.querySelector("#new-book-form");
-const MIN_PAGES = 1;
-const MAX_PAGES = 99999;
 const newBookBtn = document.querySelector("#new-book-btn");
 newBookBtn.onclick = toggleBookForm;
 
@@ -19,40 +20,47 @@ function Book(title, author, pages, isRead) {
 }
 
 function addBookToLibrary(book) {
-    insertHTMLTableRow("library", book, library.length);
+    insertHTMLTableRow(book, library.length);
     library.push(book);
 }
 
-function insertHTMLTableRow(tableId, object, index) {
-    const table = document.getElementById(tableId);
-    const tbody = table.getElementsByTagName('tbody')[0];
+function insertHTMLTableRow(object, index, tableIndex = 0) {
+    const tbody = document.getElementsByTagName('table')[tableIndex].getElementsByTagName('tbody')[0];
     const row = tbody.insertRow(index);
     row.setAttribute("data-index-number", index);
-    insertSanitizedRowCells(row, object, ["title", "author", "pages"]);
+    insertSanitizedRowCells(row, object);
 }
 
-function insertSanitizedRowCells(row, object, userInputKeys) {
-    for (const key of userInputKeys) {
+function insertSanitizedRowCells(row, object) {
+    // normal input value cells to insert
+    for (const key of REQUIRED_INPUT_IDS) {
         const td = row.insertCell(-1);
         td.setHTML(object[key]);
     }
-
+    // modified status and remove button cells to insert with tied events
     appendButtonCell(row, object["status"], "book-status", toggleReadStatus);
     appendButtonCell(row, "Remove", "delete-book", removeBook);
 }
 
+function appendButtonCell(row, text, classValue, onclickEvent) {
+    const td = row.insertCell(-1);
+    const btn = document.createElement("button");
+    btn.setAttribute("class", classValue);
+    btn.textContent = `${text}`;
+    btn.onclick = onclickEvent;
+    td.append(btn);
+}
+
 // remove the selected book from the libary
-function removeBook() {
-    console.log(this);
+function removeBook(tableIndex = 0) {
     const bookRow = this.closest('tr');
-    console.log(bookRow);
     const rowIndex = Number(bookRow.dataset.indexNumber);
     // update the html table and library array
     library.splice(rowIndex, 1);
-    const table = document.getElementById("library");
-    const tbody = table.getElementsByTagName('tbody')[0];
+    const tbody = document.getElementsByTagName('table')[tableIndex].getElementsByTagName('tbody')[0];
     tbody.deleteRow(rowIndex);
-    // inefficient update to the data index number
+    // very inefficient update to the data index number
+    // we could cascade updates from the position of the deleted element instead
     // TODO: refactor
     for (let i = 0, row; row = tbody.rows[i]; i++) {
         row.setAttribute("data-index-number", i);
@@ -65,15 +73,6 @@ function toggleReadStatus() {
     const newStatus = (this.textContent === "Read") ? "Not Read" : "Read";
     library[rowIndex].status = newStatus;
     this.textContent = newStatus;
-}
-
-function appendButtonCell(row, text, classValue, onclickEvent) {
-    const td = row.insertCell(-1);
-    const btn = document.createElement("button");
-    btn.setAttribute("class", classValue);
-    btn.textContent = `${text}`;
-    btn.onclick = onclickEvent;
-    td.append(btn);
 }
 
 // show/hide new book form
